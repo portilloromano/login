@@ -2,7 +2,7 @@
   margin: 0;
   padding: 0;
   border: unset;
-  font-family: 'Nunito Sans', sans-serif
+  font-family: "Nunito Sans", sans-serif;
 }
 
 .content {
@@ -11,90 +11,109 @@
   justify-content: center;
   align-items: center;
 
-  form {
-    width: 15rem;
-    border: 1px solid black;
-    padding: 2rem;
-    border-radius: .5rem;
-    box-shadow: 2px 2px 3px #777;
-    font-size: 1rem;
+  #content-form{
+    width: 16rem;
 
-    p {
-      font-size: 1rem;
-      font-weight: bold;
+    #logo{
+      display: block;
+      width: 10rem;
+      margin: 0 auto;
       margin-bottom: 1rem;
-      text-align: center;
     }
+  
+    form {
 
-    .form-group {
-      width: 100%;
-      margin: .5rem 0;
-      height: 2rem;
-      line-height: 2rem;
-      display: flex;
-      justify-content: space-between;
-
-      span {
-        display: inline-block;
-        width: 12%;
-        color: #87877f;
-        border: 1px solid #aaa;
-        border-right: unset;
-        border-radius: .3rem 0 0 .3rem;
+      border: 1px solid black;
+      padding: 2rem;
+      border-radius: 0.5rem;
+      box-shadow: 2px 2px 3px #777;
+      font-size: 1rem;
+  
+      p {
+        font-size: 1rem;
+        font-weight: bold;
+        margin-bottom: 1rem;
         text-align: center;
       }
-
-      input {
-        width: 88%;
-        border: 1px solid #aaa;
-        border-radius: 0 .3rem .3rem 0;
+  
+      .form-group {
+        width: 100%;
+        margin: 0.5rem 0;
+        height: 2rem;
+        line-height: 2rem;
+        display: flex;
+        justify-content: space-between;
+  
+        span {
+          display: inline-block;
+          width: 12%;
+          color: #87877f;
+          border: 1px solid #aaa;
+          border-right: unset;
+          border-radius: 0.3rem 0 0 0.3rem;
+          text-align: center;
+        }
+  
+        input {
+          width: 88%;
+          border: 1px solid #aaa;
+          border-radius: 0 0.3rem 0.3rem 0;
+        }
       }
-    }
-
-    .form-checkbox {
-      display: flex;
-      justify-content: center;
-      margin-top: 1rem;
-      margin-bottom: 1rem;
-      
-      label {
-        font-size: .8rem;
-        margin-left: .5rem;
+  
+      .form-checkbox {
+        display: flex;
+        justify-content: center;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+  
+        label {
+          font-size: 0.8rem;
+          margin-left: 0.5rem;
+        }
       }
-    }
-
-    button {
-      width: 100%;
-      height: 2rem;
-      background-color: #58B956;
-      border-color: 2px solid #4B8A4A;
-      border-radius: .3rem;
-      color: #fff;
-      font-weight: bold;
-      font-size: 1rem;
-      transition: ease .3s;
-
-      &:hover {
-        background-color: #4B8A4A;
+  
+      button {
+        width: 100%;
+        height: 2rem;
+        background-color: #58b956;
+        border-color: 2px solid #4b8a4a;
+        border-radius: 0.3rem;
+        color: #fff;
+        font-weight: bold;
+        font-size: 1rem;
+        transition: ease 0.3s;
+  
+        &:hover {
+          background-color: #4b8a4a;
+        }
       }
-    }
-
-    .error {
-      background-color: #F2DEDF;
-      color: #E0706C;
-      font-size: .8rem;
-      border-radius: .3rem;
-      font-weight: unset;
-      line-height: 2.5rem;
+  
+      .error {
+        background-color: #f2dedf;
+        color: #e0706c;
+        font-size: 0.8rem;
+        border-radius: 0.3rem;
+        font-weight: unset;
+        padding: .3rem;
+      }
     }
   }
 }
 
-header{
-  background-color: #EC2127;
+header {
+  display: flex;
   height: 4rem;
-  line-height: 4rem;
-  color: #fff;
-  text-align: right;
-  padding-right: 1rem;
+  padding: 0 1rem;
+  color: #ec2127;
+  justify-content: space-between;
+  align-items: center;
+
+  #logo {
+    width: 220px;
+  }
+
+  #user{
+    text-align: center;
+  }
 }
