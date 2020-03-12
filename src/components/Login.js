@@ -5,13 +5,13 @@ import { localSet } from '../services/localstorage.service';
 import LoginService from '../services/apis/login.service';
 
 const Login = ({ addUser, ...props }) => {
-  const [data, setData] = useState({
+  const [formData, setFormData] = useState({
     email: '',
     password: '',
     remember: false
   });
 
-  const { email, password, remember } = data;
+  const { email, password, remember } = formData;
 
   const [error, setError] = useState({
     state: false,
@@ -20,8 +20,8 @@ const Login = ({ addUser, ...props }) => {
 
   const inputChange = e => {
     const value = e.target.type === "checkbox" ? e.target.checked : e.target.value
-    setData({
-      ...data,
+    setFormData({
+      ...formData,
       [e.target.name]: value
     });
   }

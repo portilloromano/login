@@ -5,37 +5,42 @@
   font-family: "Nunito Sans", sans-serif;
 }
 
+.clearfix {
+  display: flow-root;
+}
+
+////////// LOGIN //////////
+
 .content {
   height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
 
-  #content-form{
+  #content-form {
     width: 16rem;
 
-    #logo{
+    #logo {
       display: block;
       width: 10rem;
       margin: 0 auto;
       margin-bottom: 1rem;
     }
-  
-    form {
 
+    form {
       border: 1px solid black;
       padding: 2rem;
       border-radius: 0.5rem;
       box-shadow: 2px 2px 3px #777;
       font-size: 1rem;
-  
+
       p {
         font-size: 1rem;
         font-weight: bold;
         margin-bottom: 1rem;
         text-align: center;
       }
-  
+
       .form-group {
         width: 100%;
         margin: 0.5rem 0;
@@ -43,7 +48,7 @@
         line-height: 2rem;
         display: flex;
         justify-content: space-between;
-  
+
         span {
           display: inline-block;
           width: 12%;
@@ -53,26 +58,26 @@
           border-radius: 0.3rem 0 0 0.3rem;
           text-align: center;
         }
-  
+
         input {
           width: 88%;
           border: 1px solid #aaa;
           border-radius: 0 0.3rem 0.3rem 0;
         }
       }
-  
+
       .form-checkbox {
         display: flex;
         justify-content: center;
         margin-top: 1rem;
         margin-bottom: 1rem;
-  
+
         label {
           font-size: 0.8rem;
           margin-left: 0.5rem;
         }
       }
-  
+
       button {
         width: 100%;
         height: 2rem;
@@ -83,23 +88,25 @@
         font-weight: bold;
         font-size: 1rem;
         transition: ease 0.3s;
-  
+
         &:hover {
           background-color: #4b8a4a;
         }
       }
-  
+
       .error {
         background-color: #f2dedf;
         color: #e0706c;
         font-size: 0.8rem;
         border-radius: 0.3rem;
         font-weight: unset;
-        padding: .3rem;
+        padding: 0.3rem;
       }
     }
   }
 }
+
+////////// HEADER //////////
 
 header {
   display: flex;
@@ -108,12 +115,87 @@ header {
   color: #ec2127;
   justify-content: space-between;
   align-items: center;
+  box-shadow: 0.1rem 0.1rem 0.3rem #3f3f3f;
 
   #logo {
     width: 220px;
   }
 
-  #user{
+  #menu {
+    a {
+      text-decoration: none;
+      text-transform: lowercase;
+      color: #3f3f3f;
+    }
+  }
+
+  #user {
     text-align: center;
+    
+    p{
+      margin: 0;
+    }
+  }
+}
+
+////////// INVITATION //////////
+
+#invitation {
+  display: flex;
+  margin-top: 1.5rem;
+  justify-content: center;
+  width: 100%;
+
+  h1 {
+    color: #929292;
+    text-align: center;
+    margin-top: 1rem;
+  }
+
+  form {
+    display: flex;
+    justify-content: center;
+    width: 90%;
+    box-shadow: 0.1rem 0.1rem 0.3rem #777;
+    max-width: 720px;
+
+    .ant-form-item-control-input {
+      width: 100%;
+    }
+
+    #form {
+      width: 90%;
+      margin: 0 1rem;
+    }
+
+    .ant-form-item-label {
+      text-align: left;
+    }
+
+    .ant-form-item {
+      display: flex;
+      flex-direction: column;
+
+      .ant-row {
+        display: inline;
+      }
+
+      label {
+        color: #929292;
+      }
+    }
+
+    #select {
+      display: flex;
+      justify-content: space-between;
+
+      .ant-row.ant-form-item {
+        width: 49%;
+      }
+
+    }
+    .ant-form-item-control-input-content {
+      text-align: center;
+    }
   }
 }

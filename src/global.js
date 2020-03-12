@@ -1,5 +1,5 @@
 const GLOBAL = {
-  'url': 'https://api.geekshubsacademy.com/api/ams/v1_5/public'
+  'url': 'https://api.geekshubsacademy.com'
 }
 
 export default GLOBAL;
