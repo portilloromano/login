@@ -122,17 +122,17 @@ header {
   }
 
   #menu {
-    a {
-      text-decoration: none;
-      text-transform: lowercase;
-      color: #3f3f3f;
+    ul {
+      li {
+        color: #3f3f3f;
+      }
     }
   }
 
   #user {
     text-align: center;
-    
-    p{
+
+    p {
       margin: 0;
     }
   }
@@ -157,7 +157,7 @@ header {
     justify-content: center;
     width: 90%;
     box-shadow: 0.1rem 0.1rem 0.3rem #777;
-    max-width: 720px;
+    max-width: 768px;
 
     .ant-form-item-control-input {
       width: 100%;
@@ -192,10 +192,34 @@ header {
       .ant-row.ant-form-item {
         width: 49%;
       }
-
     }
     .ant-form-item-control-input-content {
       text-align: center;
+    }
+  }
+}
+
+////////// SEE INVITATION //////////
+
+#seeInvitation {
+  display: flex;
+  margin-top: 1.5rem;
+  justify-content: center;
+  width: 100%;
+
+  #content {
+    width: 90%;
+    box-shadow: 0.1rem 0.1rem 0.3rem #777;
+    max-width: 1024px;
+
+    h1 {
+      color: #929292;
+      text-align: center;
+      margin-top: 1rem;
+    }
+
+    #table {
+      margin: 0 1rem;
     }
   }
 }

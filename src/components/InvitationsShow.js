@@ -1,72 +1,192 @@
 import React, { Fragment, useState, useEffect } from 'react';
-import { Table } from 'antd';
+import { Table, Input, Button } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
+import Highlighter from 'react-highlight-words';
 import Header from './Header';
 import { localGet } from '../services/localstorage.service';
 import InvitationService from '../services/apis/invitation.service';
 
-const columns = [
-  {
-    title: 'ID',
-    dataIndex: 'id',
-  },
-  {
-    title: 'Full Name',
-    dataIndex: 'fullName',
-    sorter: {
-      compare: (a, b) => a.fullName - b.fullName,
-      multiple: 4,
-    },
-  },
-  {
-    title: 'Email',
-    dataIndex: 'email',
-    sorter: {
-      compare: (a, b) => a.email - b.email,
-      multiple: 3,
-    },
-  },
-  {
-    title: 'Company',
-    dataIndex: 'company',
-    sorter: {
-      compare: (a, b) => a.company - b.company,
-      multiple: 2,
-    },
-  },
-  {
-    title: 'Register Date',
-    dataIndex: 'registerDate',
-    sorter: {
-      compare: (a, b) => a.registerDate - b.registerDate,
-      multiple: 1,
-    },
-  },
-];
-
-const onChange = (pagination, filters, sorter, extra) => {
-  console.log('params', pagination, filters, sorter, extra);
-}
-
 const InvitationsShow = () => {
-  const [invitations, setInvitations] = useState([]);
+  const [data, setData] = useState([]);
+
+  const [state, setState] = useState(
+    {
+      searchText: '',
+      searchedColumn: '',
+    }
+  );
+
+  const parseDate = (dateStr) => {
+    let year = dateStr.slice(0, 4);
+    let month = dateStr.slice(5, 7);
+    let day = dateStr.slice(8, 10);
+    let time = dateStr.slice(11, 16);
+
+    return `${year}/${month}/${day} ${time}`
+  };
+
+  const getColumnSearchProps = dataIndex => {
+    let searchInput;
+    return ({
+      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+        <div style={{ padding: 8 }}>
+          <Input
+            ref={node => {
+              searchInput = node;
+            }}
+            placeholder={`Search ${dataIndex}`}
+            value={selectedKeys[0]}
+            onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+            onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+            style={{ width: 188, marginBottom: 8, display: 'block' }}
+          />
+          <Button
+            type="primary"
+            onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+            icon={<SearchOutlined />}
+            size="small"
+            style={{ width: 90, marginRight: 8 }}
+          >
+            Search
+        </Button>
+          <Button onClick={() => handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+            Reset
+        </Button>
+        </div>
+      ),
+      filterIcon: filtered => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
+      onFilter: (value, record) =>
+        record[dataIndex]
+          .toString()
+          .toLowerCase()
+          .includes(value.toLowerCase()),
+      onFilterDropdownVisibleChange: visible => {
+        if (visible) {
+          setTimeout(() => searchInput.select());
+        }
+      },
+      render: text =>
+        state.searchedColumn === dataIndex ? (
+          <Highlighter
+            highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+            searchWords={[state.searchText]}
+            autoEscape
+            textToHighlight={text.toString()}
+          />
+        ) : (
+            text
+          ),
+    })
+  };
+
+  const handleSearch = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+    setState({
+      searchText: selectedKeys[0],
+      searchedColumn: dataIndex,
+    });
+  };
+
+  const handleReset = clearFilters => {
+    clearFilters();
+    setState({ searchText: '' });
+  };
 
   useEffect(() => {
     const token = localGet('jwt');
 
     InvitationService.getInvitations(token)
       .then(res => {
-        setInvitations(res.data.user);
+        setData(res.data.user.map(invitation => (
+          {
+            key: invitation.id,
+            id: invitation.id,
+            fullName: `${invitation.name} ${invitation.surname}`,
+            email: invitation.email,
+            empresa: invitation.empresa,
+            date: parseDate(invitation.createdAt)
+          }
+        )))
       })
       .catch(err => {
         console.log(err);
       })
   }, [])
 
+  const columns = [
+    {
+      title: 'ID',
+      dataIndex: 'id',
+    },
+    {
+      title: 'Full Name',
+      dataIndex: 'fullName',
+      key: 'fullName',
+      sorter: {
+        compare: (a, b) => {
+          try {
+            return a.fullName.localeCompare(b.fullName)
+          } catch (error) { }
+        },
+        multiple: 4,
+      },
+      ...getColumnSearchProps('fullName'),
+    },
+    {
+      title: 'Email',
+      dataIndex: 'email',
+      key: 'email',
+      sorter: {
+        compare: (a, b) => {
+          try {
+            return a.email.localeCompare(b.email)
+          } catch (error) { }
+        },
+        multiple: 3,
+      },
+      ...getColumnSearchProps('email'),
+    },
+    {
+      title: 'Company',
+      dataIndex: 'empresa',
+      key: 'empresa',
+      sorter: {
+        compare: (a, b) => {
+          try {
+            return a.empresa.localeCompare(b.empresa)
+          } catch (error) { }
+        },
+        multiple: 2,
+      },
+      ...getColumnSearchProps('empresa'),
+    },
+    {
+      title: 'Register Date',
+      dataIndex: 'date',
+      key: 'date',
+      sorter: {
+        compare: (a, b) => {
+          try {
+            return a.date.localeCompare(b.date)
+          } catch (error) { }
+        },
+        multiple: 1,
+      },
+      ...getColumnSearchProps('date'),
+    },
+  ];
+
   return (
     <Fragment>
       <Header />
-      <h1>See Invitations</h1>
-      <Table columns={columns} pagination={10} dataSource={invitations} onChange={onChange} />
+      <div id="seeInvitation">
+        <div id="content">
+          <h1>See Invitations</h1>
+          <div id="table">
+            <Table columns={columns} dataSource={data} pagination={{ pageSize: 5 }} />
+          </div>
+        </div>
+      </div>
     </Fragment>
   );
 }
