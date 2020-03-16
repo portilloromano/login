@@ -100,26 +100,6 @@ const InvitationsShow = () => {
     setState({ searchText: '' });
   };
 
-  useEffect(() => {
-    const token = localGetItem('jwt');
-
-    InvitationService.getInvitations(token)
-      .then(res => {
-        setData(res.data.user.map(invitation => (
-          {
-            key: invitation.id,
-            fullName: `${invitation.name} ${invitation.surname}`,
-            email: invitation.email,
-            empresa: invitation.empresa,
-            date: parseDate(invitation.createdAt)
-          }
-        )))
-      })
-      .catch(err => {
-        console.log(err);
-      })
-  }, [])
-
   const columns = [
     {
       title: 'ID',
@@ -183,18 +163,42 @@ const InvitationsShow = () => {
     },
   ];
 
-  const dataPrepare = () => {
-    setExportData({
-      title: 'Invitations',
-      headers: [columns.map(column => column.title)],
-      data: data.map(row => Object.values(row))
-    });
-  }
+  useEffect(() => {
+    const token = localGetItem('jwt');
 
-  const toPDF = () => {
-    dataPrepare();
-    ToPDF(exportData.title, exportData.headers, exportData.data, 'landscape');
-  }
+    InvitationService.getInvitations(token)
+      .then(res => {
+        setData(res.data.user.map(invitation => (
+          {
+            key: invitation.id,
+            fullName: `${invitation.name} ${invitation.surname}`,
+            email: invitation.email,
+            empresa: invitation.empresa,
+            date: parseDate(invitation.createdAt)
+          }
+        ))
+        );
+
+        setExportData(
+          {
+            title: 'Invitations',
+            headers: [columns.map(column => column.title)],
+            data: res.data.user.map(invitation => (
+              [
+                invitation.id,
+                `${invitation.name} ${invitation.surname}`,
+                invitation.email,
+                invitation.empresa,
+                parseDate(invitation.createdAt)
+              ]
+            ))
+          }
+        );
+      })
+      .catch(err => {
+        console.log(err);
+      })
+  }, [])
 
   return (
     <Fragment>
@@ -203,12 +207,11 @@ const InvitationsShow = () => {
         <div id="content">
           <h1>Invitations</h1>
           <div id="btn">
-            <Button onClick={() => toPDF()}>PDF</Button>
+            <Button onClick={() => ToPDF(exportData.title, exportData.headers, exportData.data, 'landscape')}>PDF</Button>
             <CSVLink
               className="ant-btn"
-              onClick={() => dataPrepare()}
               data={exportData.headers.concat(exportData.data)}>
-                CSV
+              CSV
             </CSVLink>
           </div>
           <div id="table">
