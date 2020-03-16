@@ -2,9 +2,11 @@ import React, { Fragment, useState, useEffect } from 'react';
 import { Table, Input, Button } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
+import { CSVLink } from "react-csv";
 import Header from './Header';
-import { localGet } from '../services/localstorage.service';
+import { localGetItem } from '../services/localstorage.service';
 import InvitationService from '../services/apis/invitation.service';
+import ToPDF from '../services/toPDF.service';
 
 const InvitationsShow = () => {
   const [data, setData] = useState([]);
@@ -15,6 +17,12 @@ const InvitationsShow = () => {
       searchedColumn: '',
     }
   );
+
+  const [exportData, setExportData] = useState({
+    title: '',
+    headers: [],
+    data: []
+  })
 
   const parseDate = (dateStr) => {
     let year = dateStr.slice(0, 4);
@@ -93,14 +101,13 @@ const InvitationsShow = () => {
   };
 
   useEffect(() => {
-    const token = localGet('jwt');
+    const token = localGetItem('jwt');
 
     InvitationService.getInvitations(token)
       .then(res => {
         setData(res.data.user.map(invitation => (
           {
             key: invitation.id,
-            id: invitation.id,
             fullName: `${invitation.name} ${invitation.surname}`,
             email: invitation.email,
             empresa: invitation.empresa,
@@ -176,12 +183,34 @@ const InvitationsShow = () => {
     },
   ];
 
+  const dataPrepare = () => {
+    setExportData({
+      title: 'Invitations',
+      headers: [columns.map(column => column.title)],
+      data: data.map(row => Object.values(row))
+    });
+  }
+
+  const toPDF = () => {
+    dataPrepare();
+    ToPDF(exportData.title, exportData.headers, exportData.data, 'landscape');
+  }
+
   return (
     <Fragment>
       <Header />
       <div id="seeInvitation">
         <div id="content">
-          <h1>See Invitations</h1>
+          <h1>Invitations</h1>
+          <div id="btn">
+            <Button onClick={() => toPDF()}>PDF</Button>
+            <CSVLink
+              className="ant-btn"
+              onClick={() => dataPrepare()}
+              data={exportData.headers.concat(exportData.data)}>
+                CSV
+            </CSVLink>
+          </div>
           <div id="table">
             <Table columns={columns} dataSource={data} pagination={{ pageSize: 5 }} />
           </div>

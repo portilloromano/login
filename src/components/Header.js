@@ -1,10 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Menu } from 'antd';
-import {GiftOutlined} from '@ant-design/icons';
-
-const { SubMenu } = Menu;
+import Navbar from 'react-bootstrap/Navbar'
+import Nav from 'react-bootstrap/Nav'
+import NavDropdown from 'react-bootstrap/NavDropdown'
+import { GiftOutlined, UserOutlined } from '@ant-design/icons';
+import { localRemoveItem } from '../services/localstorage.service';
 
 const Inside = ({ user }) => {
   const { nickname, rol } = user;
@@ -14,32 +15,48 @@ const Inside = ({ user }) => {
     userRol = "admin"
   }
 
+  const sesionClose = () => {
+    localRemoveItem('jwt');
+  }
+
   return (
     <header>
-      <img src="/logo.svg" alt="GeeksHubs Academy" id="logo" />
-      <div id="menu">
-        <Menu mode="horizontal">
-          <SubMenu
-            title={
-              <span className="submenu-title-wrapper">
-                <GiftOutlined />
-                Invitations
-            </span>
-            }
-          >
-            <Menu.Item key="seeInvitations">
-              <Link to="/invitation/show">See Invitations</Link>
-            </Menu.Item>
-            <Menu.Item key="sendInvitation">
-              <Link to="/invitation">Send Invitations</Link>
-            </Menu.Item>
-          </SubMenu>
-        </Menu>
-      </div>
-      <div id="user">
-        <p>{nickname}</p>
-        <p>({userRol})</p>
-      </div>
+      <Navbar expand="sm">
+        <Navbar.Brand id="logo">
+          <img src="/logo.svg" alt="GeeksHubs Academy" id="logo" />
+        </Navbar.Brand>
+        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        <Navbar.Collapse id="basic-navbar-nav">
+          <Nav className="m-auto">
+            <NavDropdown title={
+              <div className="item">
+                <GiftOutlined className="icons"/>
+                  Invitations
+              </div>
+            } id="basic-nav-dropdown">
+              <Link className="dropdown-item" to="/invitation/show">
+                See Invitations
+              </Link>
+              <Link className="dropdown-item" to="/invitation">
+                Send Invitations
+              </Link>
+            </NavDropdown>
+          </Nav>
+          <Nav className="ml-auto user">
+            <NavDropdown title={
+              <div id="user" className="item">
+                <UserOutlined className="icons"/>
+                <span>{nickname}</span>
+                <span>({userRol})</span>
+              </div>
+            } id="basic-nav-dropdown">
+              <Link to="/" className="dropdown-item" onClick={sesionClose}>
+                Cerrar Sesión
+              </Link>
+            </NavDropdown>
+          </Nav>
+        </Navbar.Collapse>
+      </Navbar>
     </header>
   );
 }

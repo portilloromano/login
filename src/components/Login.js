@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import Error from './Error';
-import { localSet } from '../services/localstorage.service';
+import { localSetItem } from '../services/localstorage.service';
 import LoginService from '../services/apis/login.service';
 
 const Login = ({ addUser, ...props }) => {
@@ -42,7 +42,7 @@ const Login = ({ addUser, ...props }) => {
           });
           return;
         }
-        localSet('jwt', res.data.jwt);
+        localSetItem('jwt', res.data.jwt);
 
         addUser({
           nickname: res.data.user.nickname,

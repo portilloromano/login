@@ -1,7 +1,7 @@
 import React, { useState, Fragment, useEffect } from 'react';
 import { Form, Input, Button, Select } from 'antd';
 import Header from './Header';
-import { localGet } from '../services/localstorage.service';
+import { localGetItem } from '../services/localstorage.service';
 import InvitationService from '../services/apis/invitation.service';
 import ModalMessage from './ModalMessage';
 
@@ -19,7 +19,7 @@ const Invitation = () => {
 
   const [business, setBusiness] = useState([]);
 
-  const token = localGet('jwt');
+  const token = localGetItem('jwt');
 
   useEffect(() => {
     InvitationService.getBusiness(token)
