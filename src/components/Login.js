@@ -68,7 +68,7 @@ const Login = ({ addUser, ...props }) => {
   return (
     <div className="content">
       <div id="content-form" >
-        <img src="./logo.svg" alt="GeeksHubs Academy" id="logo" />
+        <img src="/img/logo.svg" alt="GeeksHubs Academy" id="logo" />
         <form
           onSubmit={submitLogin}
         >

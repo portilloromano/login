@@ -206,7 +206,7 @@ header {
       }
 
       label {
-        color: #929292;
+        color: #3f3f3f;
       }
     }
 
@@ -224,9 +224,9 @@ header {
   }
 }
 
-////////// SEE INVITATION //////////
+////////// SEE INVITATION - USERS //////////
 
-#seeInvitation {
+#show {
   display: flex;
   margin-top: 1.5rem;
   justify-content: center;
@@ -245,11 +245,20 @@ header {
 
     #btn {
       margin-left: 2rem;
+      margin-bottom: 1rem;
+
+      .ant-btn {
+        margin-right: 0.1rem;
+      }
     }
 
     #table {
       overflow-x: auto;
       margin: 0 1rem;
+
+      img{
+        height: 3rem;
+      }
     }
   }
 }

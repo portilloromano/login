@@ -23,14 +23,14 @@ const Inside = ({ user }) => {
     <header>
       <Navbar expand="sm">
         <Navbar.Brand id="logo">
-          <img src="/logo.svg" alt="GeeksHubs Academy" id="logo" />
+          <img src="/img/logo.svg" alt="GeeksHubs Academy" id="logo" />
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="m-auto">
             <NavDropdown title={
               <div className="item">
-                <GiftOutlined className="icons"/>
+                <GiftOutlined className="icons" />
                   Invitations
               </div>
             } id="basic-nav-dropdown">
@@ -41,11 +41,21 @@ const Inside = ({ user }) => {
                 Send Invitations
               </Link>
             </NavDropdown>
+            <NavDropdown title={
+              <div className="item">
+                <UserOutlined className="icons" />
+                  Users
+              </div>
+            } id="basic-nav-dropdown">
+              <Link className="dropdown-item" to="/users/show">
+                See Users
+              </Link>
+            </NavDropdown>
           </Nav>
           <Nav className="ml-auto user">
             <NavDropdown title={
               <div id="user" className="item">
-                <UserOutlined className="icons"/>
+                <UserOutlined className="icons" />
                 <span>{nickname}</span>
                 <span>({userRol})</span>
               </div>

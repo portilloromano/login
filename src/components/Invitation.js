@@ -2,8 +2,10 @@ import React, { useState, Fragment, useEffect } from 'react';
 import { Form, Input, Button, Select } from 'antd';
 import Header from './Header';
 import { localGetItem } from '../services/localstorage.service';
-import InvitationService from '../services/apis/invitation.service';
+import InvitationsService from '../services/apis/invitations.service';
 import ModalMessage from './ModalMessage';
+
+const token = localGetItem('jwt');
 
 const Invitation = () => {
   const { Option } = Select;
@@ -19,10 +21,8 @@ const Invitation = () => {
 
   const [business, setBusiness] = useState([]);
 
-  const token = localGetItem('jwt');
-
   useEffect(() => {
-    InvitationService.getBusiness(token)
+    InvitationsService.getBusiness(token)
       .then(res => {
         setBusiness(res.data.business);
       })
@@ -36,7 +36,7 @@ const Invitation = () => {
       data: values
     }
 
-    InvitationService.postInvitation(data, token)
+    InvitationsService.postInvitation(data, token)
       .then(res => {
         setModalShow({
           type: 'success',

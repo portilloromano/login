@@ -3,12 +3,12 @@ import { Table, Button } from 'antd';
 import { CSVLink } from "react-csv";
 import Header from './Header';
 import { localGetItem } from '../services/localstorage.service';
-import InvitationsService from '../services/apis/invitations.service';
+import UsersService from '../services/apis/users.service';
 import toPDF from '../services/toPDF.service';
 import getColumnSearchProps from '../services/tableColumnSearch.service';
 import { parseDate } from '../services/helpers.service';
 
-const InvitationsShow = () => {
+const UserShow = () => {
   const [loading, setLoading] = useState(false);
 
   const [data, setData] = useState([]);
@@ -23,6 +23,11 @@ const InvitationsShow = () => {
     {
       title: 'ID',
       dataIndex: 'key',
+    },
+    {
+      title: '',
+      dataIndex: 'img_profile',
+      render: (img_profile) => <img src={img_profile} />
     },
     {
       title: 'Full Name',
@@ -53,18 +58,18 @@ const InvitationsShow = () => {
       ...getColumnSearchProps('email'),
     },
     {
-      title: 'Company',
-      dataIndex: 'empresa',
-      key: 'empresa',
+      title: 'Active',
+      dataIndex: 'active',
+      key: 'active',
       sorter: {
         compare: (a, b) => {
           try {
-            return a.empresa.localeCompare(b.empresa)
+            return a.active.localeCompare(b.active)
           } catch (error) { }
         },
         multiple: 2,
       },
-      ...getColumnSearchProps('empresa'),
+      ...getColumnSearchProps('active'),
     },
     {
       title: 'Register Date',
@@ -86,30 +91,31 @@ const InvitationsShow = () => {
     const token = localGetItem('jwt');
     setLoading(true);
 
-    InvitationsService.getInvitations(token)
+    UsersService.getUsers(token)
       .then(res => {
-        setData(res.data.user.map(invitation => (
+        setData(res.data.user.map(user => (
           {
-            key: invitation.id,
-            fullName: `${invitation.name} ${invitation.surname}`,
-            email: invitation.email,
-            empresa: invitation.empresa,
-            date: parseDate(invitation.createdAt)
+            key: user.id,
+            img_profile: user.img_profile !== null ? user.img_profile : '/img/logo-no-image.png',
+            fullName: `${user.name} ${user.surname}`,
+            email: user.email,
+            active: user.active ? 'Active' : 'Inactive',
+            date: parseDate(user.createdAt)
           }
         ))
         );
 
         setExportData(
           {
-            title: 'Invitations',
-            headers: [columns.map(column => column.title)],
-            data: res.data.user.map(invitation => (
+            title: 'Users',
+            headers: [columns.filter(column => column.title !== '').map(column => column.title)],
+            data: res.data.user.map(user => (
               [
-                invitation.id,
-                `${invitation.name} ${invitation.surname}`,
-                invitation.email,
-                invitation.empresa,
-                parseDate(invitation.createdAt)
+                user.id,
+                `${user.name} ${user.surname}`,
+                user.email,
+                user.active ? 'Active' : 'Inactive',
+                parseDate(user.createdAt)
               ]
             ))
           }
@@ -127,7 +133,7 @@ const InvitationsShow = () => {
       <Header />
       <div id="show">
         <div id="content">
-          <h1>Invitations</h1>
+          <h1>Users</h1>
           <div id="btn">
             <Button onClick={() => toPDF(exportData.title, exportData.headers, exportData.data, 'landscape')}>PDF</Button>
             <CSVLink
@@ -150,4 +156,4 @@ const InvitationsShow = () => {
   );
 }
 
-export default InvitationsShow;
+export default UserShow;
