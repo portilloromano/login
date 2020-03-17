@@ -140,13 +140,9 @@ header {
     align-items: center;
 
     .icons {
-      margin-right: 0.5rem;
+      margin-right: 0.2rem;
+      padding-bottom: 0.25rem;
     }
-  }
-
-  .dropdown-menu {
-    right: 0;
-    left: auto;
   }
 
   @media (min-width: 575px) {
@@ -158,6 +154,13 @@ header {
         display: block;
         font-size: 0.9rem;
         line-height: 0.9rem;
+      }
+    }
+
+    .user {
+      .dropdown-menu {
+        right: 0;
+        left: auto;
       }
     }
   }
@@ -213,9 +216,19 @@ header {
     #select {
       display: flex;
       justify-content: space-between;
+      flex-wrap: wrap;
 
       .ant-row.ant-form-item {
+        display: inline-block;
         width: 49%;
+      }
+
+      @media (max-width: 575px) {
+        flex-direction: column;
+
+        .ant-row.ant-form-item {
+          width: 100%;
+        }
       }
     }
     .ant-form-item-control-input-content {
@@ -256,7 +269,7 @@ header {
       overflow-x: auto;
       margin: 0 1rem;
 
-      img{
+      img {
         height: 3rem;
       }
     }

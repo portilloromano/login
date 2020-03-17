@@ -159,10 +159,7 @@ const Invitation = () => {
           </div>
         </Form>
       </div>
-      {visible ?
-        <ModalMessage type={type} title={title} body={body} /> :
-        null
-      }
+      {visible ? <ModalMessage type={type} title={title} body={body} /> : null}
     </Fragment>
   );
 }
