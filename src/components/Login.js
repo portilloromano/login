@@ -1,39 +1,22 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
+import { Form, Input, Button, Checkbox } from 'antd';
 import Error from './Error';
 import { localSetItem } from '../services/localstorage.service';
 import LoginService from '../services/apis/login.service';
 
 const Login = ({ addUser, ...props }) => {
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-    remember: false
-  });
-
-  const { email, password, remember } = formData;
-
   const [error, setError] = useState({
     state: false,
     message: ''
   });
 
-  const inputChange = e => {
-    const value = e.target.type === "checkbox" ? e.target.checked : e.target.value
-    setFormData({
-      ...formData,
-      [e.target.name]: value
-    });
-  }
-
-  const submitLogin = e => {
-    e.preventDefault();
-
-    if (email.trim() === '' || password.trim() === '') {
-      return;
+  const onFinish = values => {
+    const data = {
+      data: values
     }
 
-    LoginService.postLogin(email, password)
+    LoginService.postLogin(data)
       .then(res => {
         if (res.status === 204) {
           setError({
@@ -69,51 +52,54 @@ const Login = ({ addUser, ...props }) => {
     <div className="content">
       <div id="content-form" >
         <img src="/img/logo.svg" alt="GeeksHubs Academy" id="logo" />
-        <form
-          onSubmit={submitLogin}
+        <Form
+          onFinish={onFinish}
         >
           <p>Login</p>
           {error.state ? <Error message={error.message} /> : null}
-          <div className="form-group">
-            <span>@</span>
-            <input
-              type="email"
-              placeholder="Email"
-              name="email"
-              value={email}
-              onChange={inputChange}
-              required
-            />
-          </div>
 
-          <div className="form-group">
-            <span>*</span>
-            <input
-              type="password"
-              placeholder="Password"
-              name="password"
-              value={password}
-              onChange={inputChange}
-              required
-            />
-          </div>
-
-          <div className="form-checkbox">
-            <input
-              type="checkbox"
-              name="remember"
-              value={remember}
-              onChange={inputChange}
-            />
-            <label>Remember me</label>
-          </div>
-
-          <button
-            type="submit"
+          <Form.Item
+            name="nickname"
+            rules={[
+              {
+                type: 'email',
+                message: 'The input is not valid Email!',
+              },
+              {
+                required: true,
+                message: 'Please input your Email!',
+              },
+            ]}
           >
-            Log In
-        </button>
-        </form>
+            <Input addonBefore="@" />
+          </Form.Item>
+
+          <Form.Item
+            name="password"
+            rules={[
+              {
+                required: true,
+                message: 'Please input your password!',
+              },
+            ]}
+          >
+            <Input.Password addonBefore="*" />
+          </Form.Item>
+
+          <Form.Item
+            name="remember"
+            valuePropName="checked"
+            className="form-checkbox"
+          >
+            <Checkbox>Remember me</Checkbox>
+          </Form.Item>
+
+          <Form.Item >
+            <Button type="primary" htmlType="submit">
+              Log In
+            </Button>
+          </Form.Item>
+        </Form>
       </div>
     </div>
   );

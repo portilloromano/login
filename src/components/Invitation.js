@@ -61,7 +61,6 @@ const Invitation = () => {
       <Header />
       <div id="invitation">
         <Form
-          initialValues={{ remember: true }}
           onFinish={onFinish}
         >
           <div id="form">
@@ -109,6 +108,7 @@ const Invitation = () => {
                 rules={[
                   {
                     required: true,
+                    message: 'Please select a business!',
                   },
                 ]}
               >
@@ -135,6 +135,7 @@ const Invitation = () => {
                 rules={[
                   {
                     required: true,
+                    message: 'Please select a role!',
                   },
                 ]}
               >

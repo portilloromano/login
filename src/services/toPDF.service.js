@@ -1,7 +1,7 @@
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 
-const ToPDF = (title, headers, data, orientation = 'portrait') => {
+const ToPDF = (title, headers, data, filename = 'report.pdf', orientation = 'portrait') => {
   const unit = "pt";
   const size = "A4"; // Use A1, A2, A3 or A4
   // const orientation = "portrait"; // portrait or landscape
@@ -19,7 +19,7 @@ const ToPDF = (title, headers, data, orientation = 'portrait') => {
 
   doc.text(title, marginLeft, 40);
   doc.autoTable(content);
-  doc.save("report.pdf")
+  doc.save(filename);
 }
 
 export default ToPDF;

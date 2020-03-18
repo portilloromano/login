@@ -135,9 +135,16 @@ const UserShow = () => {
         <div id="content">
           <h1>Users</h1>
           <div id="btn">
-            <Button onClick={() => toPDF(exportData.title, exportData.headers, exportData.data, 'landscape')}>PDF</Button>
+            <Button onClick={() => toPDF(
+              exportData.title,
+              exportData.headers,
+              exportData.data,
+              'users.pdf',
+              'landscape'
+            )}>PDF</Button>
             <CSVLink
               className="ant-btn"
+              filename={"users.csv"}
               data={exportData.headers.concat(exportData.data)}>
               CSV
             </CSVLink>

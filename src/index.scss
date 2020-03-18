@@ -1,12 +1,18 @@
+////////// GLOBALES //////////
+$color-font-hover: #ec2127;
+$color-font: #3f3f3f;
+$color-h1: #929292;
+$color-back-alert: #FFF2F0;
+$color-box-shadow: #777;
+////////// HEADER //////////
+$header-color-box-shadow: #3f3f3f;
+$header-color-back-active: #FFF2F0;;
+
 * {
   margin: 0;
   padding: 0;
   border: unset;
   font-family: "Nunito Sans", sans-serif;
-}
-
-.clearfix {
-  display: flow-root;
 }
 
 ////////// LOGIN //////////
@@ -28,11 +34,12 @@
     }
 
     form {
-      border: 1px solid black;
+      border: 1px solid rgba($color: #000000, $alpha: .5);
       padding: 2rem;
+      padding-top: 1rem;
+      padding-bottom: 0;
       border-radius: 0.5rem;
-      box-shadow: 2px 2px 3px #777;
-      font-size: 1rem;
+      box-shadow: 2px 2px 3px $color-box-shadow;
 
       p {
         font-size: 1rem;
@@ -41,61 +48,21 @@
         text-align: center;
       }
 
-      .form-group {
-        width: 100%;
-        margin: 0.5rem 0;
-        height: 2rem;
-        line-height: 2rem;
-        display: flex;
-        justify-content: space-between;
-
-        span {
-          display: inline-block;
-          width: 12%;
-          color: #87877f;
-          border: 1px solid #aaa;
-          border-right: unset;
-          border-radius: 0.3rem 0 0 0.3rem;
-          text-align: center;
-        }
-
-        input {
-          width: 88%;
-          border: 1px solid #aaa;
-          border-radius: 0 0.3rem 0.3rem 0;
-        }
+      .ant-input-group-addon{
+        width: 2rem;
+        padding: 0;
       }
 
-      .form-checkbox {
-        display: flex;
-        justify-content: center;
-        margin-top: 1rem;
-        margin-bottom: 1rem;
-
-        label {
-          font-size: 0.8rem;
-          margin-left: 0.5rem;
-        }
+      .ant-form-item-control-input-content{
+        text-align: center;
       }
 
       button {
         width: 100%;
-        height: 2rem;
-        background-color: #58b956;
-        border-color: 2px solid #4b8a4a;
-        border-radius: 0.3rem;
-        color: #fff;
-        font-weight: bold;
-        font-size: 1rem;
-        transition: ease 0.3s;
-
-        &:hover {
-          background-color: #4b8a4a;
-        }
       }
 
       .error {
-        background-color: #f2dedf;
+        background-color: $color-back-alert;
         color: #e0706c;
         font-size: 0.8rem;
         border-radius: 0.3rem;
@@ -110,7 +77,7 @@
 
 header {
   nav {
-    box-shadow: 0.1rem 0.1rem 0.3rem #3f3f3f;
+    box-shadow: 0.1rem 0.1rem 0.3rem $header-color-box-shadow;
 
     #logo {
       width: 200px;
@@ -118,14 +85,14 @@ header {
 
     a {
       text-decoration: none !important;
-      color: #3f3f3f !important;
+      color: $color-font !important;
 
       &:hover {
-        color: #ec2127 !important;
+        color: $color-font-hover !important;
       }
 
       &.dropdown-item:active {
-        background-color: #edcbcc !important;
+        background-color: $header-color-back-active !important;
       }
     }
 
@@ -175,7 +142,7 @@ header {
   width: 100%;
 
   h1 {
-    color: #929292;
+    color: $color-h1;
     text-align: center;
     margin-top: 1rem;
   }
@@ -184,7 +151,7 @@ header {
     display: flex;
     justify-content: center;
     width: 90%;
-    box-shadow: 0.1rem 0.1rem 0.3rem #777;
+    box-shadow: 0.1rem 0.1rem 0.3rem $color-box-shadow;
     max-width: 768px;
 
     .ant-form-item-control-input {
@@ -209,7 +176,7 @@ header {
       }
 
       label {
-        color: #3f3f3f;
+        color: $color-font;
       }
     }
 
@@ -247,11 +214,11 @@ header {
 
   #content {
     width: 90%;
-    box-shadow: 0.1rem 0.1rem 0.3rem #777;
+    box-shadow: 0.1rem 0.1rem 0.3rem $color-box-shadow;
     max-width: 1024px;
 
     h1 {
-      color: #929292;
+      color: $color-h1;
       text-align: center;
       margin-top: 1rem;
     }
