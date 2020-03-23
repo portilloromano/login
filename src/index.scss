@@ -2,11 +2,14 @@
 $color-font-hover: #ec2127;
 $color-font: #3f3f3f;
 $color-h1: #929292;
-$color-back-alert: #FFF2F0;
+$color-back-alert: #fff2f0;
 $color-box-shadow: #777;
+$color-background: #f8f9fa;
+////////// LOGIN //////////
+$login-color-background: #f5f7fa;
 ////////// HEADER //////////
 $header-color-box-shadow: #3f3f3f;
-$header-color-back-active: #FFF2F0;;
+$header-color-back-active: #fff2f0;
 
 * {
   margin: 0;
@@ -15,13 +18,18 @@ $header-color-back-active: #FFF2F0;;
   font-family: "Nunito Sans", sans-serif;
 }
 
+body {
+  background-color: $color-background;
+}
+
 ////////// LOGIN //////////
 
-.content {
+#content-login {
   height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: $login-color-background;
 
   #content-form {
     width: 16rem;
@@ -34,12 +42,13 @@ $header-color-back-active: #FFF2F0;;
     }
 
     form {
-      border: 1px solid rgba($color: #000000, $alpha: .5);
+      border: 1px solid rgba($color: #000000, $alpha: 0.5);
       padding: 2rem;
       padding-top: 1rem;
       padding-bottom: 0;
       border-radius: 0.5rem;
       box-shadow: 2px 2px 3px $color-box-shadow;
+      background-color: #fff;
 
       p {
         font-size: 1rem;
@@ -48,12 +57,12 @@ $header-color-back-active: #FFF2F0;;
         text-align: center;
       }
 
-      .ant-input-group-addon{
+      .ant-input-group-addon {
         width: 2rem;
         padding: 0;
       }
 
-      .ant-form-item-control-input-content{
+      .ant-form-item-control-input-content {
         text-align: center;
       }
 
@@ -76,59 +85,47 @@ $header-color-back-active: #FFF2F0;;
 ////////// HEADER //////////
 
 header {
-  nav {
-    box-shadow: 0.1rem 0.1rem 0.3rem $header-color-box-shadow;
+  background-color: #fff;
+  box-shadow: 0.1rem 0.1rem 0.3rem $header-color-box-shadow;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 
+  #logo-button {
+    display: flex;
+    align-items: center;
     #logo {
       width: 200px;
+      margin-right: 0.5rem;
     }
 
-    a {
-      text-decoration: none !important;
-      color: $color-font !important;
-
-      &:hover {
-        color: $color-font-hover !important;
-      }
-
-      &.dropdown-item:active {
-        background-color: $header-color-back-active !important;
-      }
-    }
-
-    .dropdown-toggle:after {
-      content: none;
+    button.ant-btn.ant-btn-primary {
+      display: flex;
+      background-color: unset;
+      border: unset;
+      box-shadow: unset;
+      color: $color-font-hover;
+      font-size: 2rem;
     }
   }
 
-  .item {
+  #user {
     display: flex;
-    height: 1rem;
-    align-items: center;
-
-    .icons {
-      margin-right: 0.2rem;
-      padding-bottom: 0.25rem;
-    }
+    flex-direction: column;
+    text-align: center;
+    line-height: 1.3rem;
   }
+}
 
-  @media (min-width: 575px) {
-    #user {
-      display: inline;
-      text-align: center;
+////////// VERTICAL MENU //////////
 
-      span {
-        display: block;
-        font-size: 0.9rem;
-        line-height: 0.9rem;
-      }
-    }
+#vertical-menu {
+  float: left;
+  margin-top: 0.2rem;
 
-    .user {
-      .dropdown-menu {
-        right: 0;
-        left: auto;
-      }
+  ul.ant-menu {
+    li.ant-menu-item {
+      padding-right: 5rem;
     }
   }
 }
@@ -139,7 +136,14 @@ header {
   display: flex;
   margin-top: 1.5rem;
   justify-content: center;
-  width: 100%;
+
+  #content {
+    width: 90%;
+    box-shadow: 0.1rem 0.1rem 0.3rem $color-box-shadow;
+    max-width: 1024px;
+    background-color: #fff;
+    max-width: 768px;
+  }
 
   h1 {
     color: $color-h1;
@@ -150,9 +154,6 @@ header {
   form {
     display: flex;
     justify-content: center;
-    width: 90%;
-    box-shadow: 0.1rem 0.1rem 0.3rem $color-box-shadow;
-    max-width: 768px;
 
     .ant-form-item-control-input {
       width: 100%;
@@ -210,12 +211,12 @@ header {
   display: flex;
   margin-top: 1.5rem;
   justify-content: center;
-  width: 100%;
 
   #content {
     width: 90%;
     box-shadow: 0.1rem 0.1rem 0.3rem $color-box-shadow;
     max-width: 1024px;
+    background-color: #fff;
 
     h1 {
       color: $color-h1;
@@ -238,7 +239,16 @@ header {
 
       img {
         height: 3rem;
+        border-radius: 0.2rem;
       }
     }
   }
+}
+
+.row-color-alert {
+  background-color: lightcoral;
+}
+
+.row-color-warning {
+  background-color: lightgoldenrodyellow;
 }

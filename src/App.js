@@ -3,7 +3,7 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import store from './store';
 import Login from './components/Login';
-import Inside from './components/Header';
+import Dashboard from './components/Dashboard';
 import Invitation from './components/Invitation';
 import InvitationsShow from './components/InvitationsShow';
 import UsersShow from './components/UsersShow';
@@ -14,7 +14,7 @@ function App() {
       <BrowserRouter>
         <Switch>
           <Route exact path="/" component={Login} />
-          <Route exact path="/inside" component={Inside} />
+          <Route exact path="/dashboard" component={Dashboard} />
           <Route exact path="/invitation" component={Invitation} />
           <Route exact path="/invitation/show" component={InvitationsShow} />
           <Route exact path="/users/show" component={UsersShow} />

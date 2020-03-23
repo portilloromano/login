@@ -32,9 +32,14 @@ const Login = ({ addUser, ...props }) => {
           rol: res.data.user.rol
         });
 
-        if (res.data.user.rol > 60) {
-          props.history.push("/inside");
+        if (res.data.user.rol < 60) {
+          setError({
+            state: true,
+            message: 'You do not have sufficient privileges'
+          });
+          return;
         }
+        props.history.push("/dashboard");
       })
       .catch(err => {
         if (err.response?.data?.res === "2") {
@@ -49,7 +54,7 @@ const Login = ({ addUser, ...props }) => {
   }
 
   return (
-    <div className="content">
+    <div id="content-login">
       <div id="content-form" >
         <img src="/img/logo.svg" alt="GeeksHubs Academy" id="logo" />
         <Form

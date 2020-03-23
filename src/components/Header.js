@@ -1,73 +1,74 @@
-import React from 'react';
+import React, { Fragment, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import Navbar from 'react-bootstrap/Navbar'
-import Nav from 'react-bootstrap/Nav'
-import NavDropdown from 'react-bootstrap/NavDropdown'
-import { GiftOutlined, UserOutlined } from '@ant-design/icons';
+import { Menu, Button } from 'antd';
+import {
+  MenuUnfoldOutlined,
+  MenuFoldOutlined,
+  UserOutlined,
+} from '@ant-design/icons';
 import { localRemoveItem } from '../services/localstorage.service';
+import VerticalMenu from './VerticalMenu';
 
-const Inside = ({ user }) => {
+const Header = ({ user }) => {
+  const [state, setState] = useState({
+    collapsed: true,
+  });
+
   const { nickname, rol } = user;
+  const { SubMenu } = Menu;
 
   let userRol = "user";
   if (rol === 99) {
     userRol = "admin"
   }
 
+  const toggleCollapsed = () => {
+    setState({
+      collapsed: !state.collapsed,
+    });
+  };
+
   const sesionClose = () => {
     localRemoveItem('jwt');
   }
 
   return (
-    <header>
-      <Navbar expand="sm">
-        <Navbar.Brand id="logo">
+    <Fragment>
+      <header>
+        <div id="logo-button">
           <img src="/img/logo.svg" alt="GeeksHubs Academy" id="logo" />
-        </Navbar.Brand>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="m-auto">
-            <NavDropdown title={
-              <div className="item">
-                <GiftOutlined className="icons" />
-                  Invitations
-              </div>
-            } id="basic-nav-dropdown">
-              <Link className="dropdown-item" to="/invitation/show">
-                See Invitations
-              </Link>
-              <Link className="dropdown-item" to="/invitation">
-                Send Invitations
-              </Link>
-            </NavDropdown>
-            <NavDropdown title={
-              <div className="item">
+
+          <Button type="primary" onClick={toggleCollapsed} style={{ marginBottom: 16 }}>
+            {React.createElement(state.collapsed ? MenuUnfoldOutlined : MenuFoldOutlined)}
+          </Button>
+        </div>
+
+        <Menu
+          id="user"
+          mode="horizontal"
+        >
+          <SubMenu
+            title={
+              <span className="submenu-title-wrapper">
                 <UserOutlined className="icons" />
-                  Users
-              </div>
-            } id="basic-nav-dropdown">
-              <Link className="dropdown-item" to="/users/show">
-                See Users
+                <div className="item">
+                  <span>{nickname}</span>
+                  <span>({userRol})</span>
+                </div>
+              </span>
+            }
+          >
+            <Menu.Item key="logout">
+              <Link to="/" onClick={sesionClose}>
+                Log Out
               </Link>
-            </NavDropdown>
-          </Nav>
-          <Nav className="ml-auto user">
-            <NavDropdown title={
-              <div id="user" className="item">
-                <UserOutlined className="icons" />
-                <span>{nickname}</span>
-                <span>({userRol})</span>
-              </div>
-            } id="basic-nav-dropdown">
-              <Link to="/" className="dropdown-item" onClick={sesionClose}>
-                Cerrar Sesión
-              </Link>
-            </NavDropdown>
-          </Nav>
-        </Navbar.Collapse>
-      </Navbar>
-    </header>
+            </Menu.Item>
+          </SubMenu>
+        </Menu>
+      </header>
+      <VerticalMenu state={state} />
+    </Fragment>
   );
 }
 
@@ -75,4 +76,4 @@ const mapStateToProps = state => ({
   user: state.user
 });
 
-export default connect(mapStateToProps)(Inside);
+export default connect(mapStateToProps)(Header);

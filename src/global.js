@@ -1,5 +1,7 @@
 const GLOBAL = {
-  'url': 'https://api.geekshubsacademy.com'
+  'url': process.env === 'development' ?
+    'https://dev.api.geekshubsacademy.com' :
+    'https://api.geekshubsacademy.com'
 }
 
 export default GLOBAL;

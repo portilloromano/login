@@ -72,6 +72,34 @@ const UserShow = () => {
       ...getColumnSearchProps('active'),
     },
     {
+      title: 'RGPD',
+      dataIndex: 'active',
+      key: 'active',
+      sorter: {
+        compare: (a, b) => {
+          try {
+            return a.active.localeCompare(b.active)
+          } catch (error) { }
+        },
+        multiple: 2,
+      },
+      ...getColumnSearchProps('active'),
+    },
+    {
+      title: 'Notification',
+      dataIndex: 'active',
+      key: 'active',
+      sorter: {
+        compare: (a, b) => {
+          try {
+            return a.active.localeCompare(b.active)
+          } catch (error) { }
+        },
+        multiple: 2,
+      },
+      ...getColumnSearchProps('active'),
+    },
+    {
       title: 'Register Date',
       dataIndex: 'date',
       key: 'date',
@@ -93,7 +121,8 @@ const UserShow = () => {
 
     UsersService.getUsers(token)
       .then(res => {
-        setData(res.data.user.map(user => (
+        let sortedByIdDes = res.data.user.sort((a, b) => (b.id - a.id));
+        setData(sortedByIdDes.map(user => (
           {
             key: user.id,
             img_profile: user.img_profile !== null ? user.img_profile : '/img/logo-no-image.png',
@@ -109,7 +138,7 @@ const UserShow = () => {
           {
             title: 'Users',
             headers: [columns.filter(column => column.title !== '').map(column => column.title)],
-            data: res.data.user.map(user => (
+            data: sortedByIdDes.map(user => (
               [
                 user.id,
                 `${user.name} ${user.surname}`,
@@ -127,6 +156,17 @@ const UserShow = () => {
         console.log(err);
       })
   }, [])
+
+  const changeRowColor = (record) => {
+    if (record.rgpd === '' && record.notification === '') {
+      return 'row-color-alert';
+    } else if (record.rgpd !== '') {
+      return 'row-color-warning';
+    }
+    else {
+      return null;
+    }
+  }
 
   return (
     <Fragment>
@@ -155,6 +195,7 @@ const UserShow = () => {
               dataSource={data}
               pagination={{ pageSize: 5 }}
               loading={loading}
+              rowClassName={(record, index) => changeRowColor(record)}
             />
           </div>
         </div>
