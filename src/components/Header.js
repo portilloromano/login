@@ -1,36 +1,41 @@
-import React, { Fragment, useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { Fragment } from 'react';
+import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Menu, Button } from 'antd';
+import { Menu, Button, Avatar } from 'antd';
 import {
   MenuUnfoldOutlined,
   MenuFoldOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import { localRemoveItem } from '../services/localstorage.service';
+import {
+  localRemoveItem,
+  sessionRemoveItem,
+  getLocalUser
+} from '../services/localStorage.service';
 import VerticalMenu from './VerticalMenu';
 
-const Header = ({ user }) => {
-  const [state, setState] = useState({
-    collapsed: true,
-  });
+const Header = ({ setVerticalMenu, verticalMenu, ...props }) => {
+  const { inlineCollapsed } = verticalMenu;
 
-  const { nickname, rol } = user;
   const { SubMenu } = Menu;
+  const user = getLocalUser();
+  if (user.exist === false) props.history.push("/");
 
-  let userRol = "user";
-  if (rol === 99) {
-    userRol = "admin"
-  }
+  const { nickname, img_profile, rol } = user;
+
+  // const img_profile = 'https://4.bp.blogspot.com/-n32HFYm_M1s/W-NQgb9lEgI/AAAAAAAAC_Y/B1jbOYulJVwC3OsETCYXy_42jKLfJNnPwCLcBGAs/s1600/fe59b1037afbdf220b1ed0e301fa8984.jpg';
 
   const toggleCollapsed = () => {
-    setState({
-      collapsed: !state.collapsed,
-    });
+    setVerticalMenu(
+      {
+        ...verticalMenu,
+        inlineCollapsed: !inlineCollapsed
+      });
   };
 
   const sesionClose = () => {
-    localRemoveItem('jwt');
+    localRemoveItem('user');
+    sessionRemoveItem('user');
   }
 
   return (
@@ -40,7 +45,7 @@ const Header = ({ user }) => {
           <img src="/img/logo.svg" alt="GeeksHubs Academy" id="logo" />
 
           <Button type="primary" onClick={toggleCollapsed} style={{ marginBottom: 16 }}>
-            {React.createElement(state.collapsed ? MenuUnfoldOutlined : MenuFoldOutlined)}
+            {React.createElement(inlineCollapsed ? MenuUnfoldOutlined : MenuFoldOutlined)}
           </Button>
         </div>
 
@@ -51,10 +56,12 @@ const Header = ({ user }) => {
           <SubMenu
             title={
               <span className="submenu-title-wrapper">
-                <UserOutlined className="icons" />
-                <div className="item">
-                  <span>{nickname}</span>
-                  <span>({userRol})</span>
+                <span>{`${nickname} (${rol})`}</span>
+                <div>
+                  {
+                    img_profile !== null ? <Avatar src={img_profile} /> : <Avatar icon={<UserOutlined />} />
+                  }
+
                 </div>
               </span>
             }
@@ -67,13 +74,22 @@ const Header = ({ user }) => {
           </SubMenu>
         </Menu>
       </header>
-      <VerticalMenu state={state} />
+      <VerticalMenu />
     </Fragment>
   );
 }
 
 const mapStateToProps = state => ({
-  user: state.user
+  verticalMenu: state.verticalMenu
 });
 
-export default connect(mapStateToProps)(Header);
+const mapDispatchToTops = dispatch => ({
+  setVerticalMenu(verticalMenu) {
+    dispatch({
+      type: 'VERTICAL_MENU',
+      verticalMenu
+    })
+  }
+});
+
+export default connect(mapStateToProps, mapDispatchToTops)(withRouter(Header));

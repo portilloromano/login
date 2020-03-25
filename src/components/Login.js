@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { connect } from 'react-redux';
 import { Form, Input, Button, Checkbox } from 'antd';
 import Error from './Error';
-import { localSetItem } from '../services/localstorage.service';
+import { localSetItem, sessionSetItem } from '../services/localStorage.service';
 import LoginService from '../services/apis/login.service';
+import UserService from '../services/apis/users.service';
 
-const Login = ({ addUser, ...props }) => {
+const Login = ({ ...props }) => {
   const [error, setError] = useState({
     state: false,
     message: ''
@@ -25,21 +25,41 @@ const Login = ({ addUser, ...props }) => {
           });
           return;
         }
-        localSetItem('jwt', res.data.jwt);
 
-        addUser({
-          nickname: res.data.user.nickname,
-          rol: res.data.user.rol
-        });
+        UserService.getUsers(res.data.jwt)
+          .then(resUser => {
+            const userFilterById = resUser.data.user.filter(user =>
+              user.id === res.data.user.id
+            );
 
-        if (res.data.user.rol < 60) {
-          setError({
-            state: true,
-            message: 'You do not have sufficient privileges'
+            const { img_profile, rol } = userFilterById[0];
+
+            const user = {
+              nickname: res.data.user.nickname,
+              img_profile: img_profile,
+              rol: rol === 99 ? 'admin' : 'user',
+              jwt: res.data.jwt
+            }
+
+            if (data.data.remember === true) {
+              localSetItem('user', user);
+            }
+            else {
+              sessionSetItem('user', user);
+            }
+
+            if (res.data.user.rol < 60) {
+              setError({
+                state: true,
+                message: 'You do not have sufficient privileges'
+              });
+              return;
+            }
+            props.history.push("/dashboard");
+          })
+          .catch(err => {
+            console.log(err);
           });
-          return;
-        }
-        props.history.push("/dashboard");
       })
       .catch(err => {
         if (err.response?.data?.res === "2") {
@@ -110,13 +130,4 @@ const Login = ({ addUser, ...props }) => {
   );
 }
 
-const mapDispatchToTops = dispatch => ({
-  addUser(user) {
-    dispatch({
-      type: 'ADD_USER',
-      user
-    })
-  }
-});
-
-export default connect(null, mapDispatchToTops)(Login);
+export default Login;

@@ -2,13 +2,13 @@ import React, { Fragment, useState, useEffect } from 'react';
 import { Table, Button } from 'antd';
 import { CSVLink } from "react-csv";
 import Header from './Header';
-import { localGetItem } from '../services/localstorage.service';
+import { getLocalJwt } from '../services/localStorage.service';
 import InvitationsService from '../services/apis/invitations.service';
 import toPDF from '../services/toPDF.service';
 import getColumnSearchProps from '../services/tableColumnSearch.service';
 import { parseDate } from '../services/helpers.service';
 
-const InvitationsShow = () => {
+const InvitationsShow = ({ ...props }) => {
   const [loading, setLoading] = useState(false);
 
   const [data, setData] = useState([]);
@@ -83,7 +83,9 @@ const InvitationsShow = () => {
   ];
 
   useEffect(() => {
-    const token = localGetItem('jwt');
+    const token = getLocalJwt();
+    if (token === null) props.history.push("/");
+
     setLoading(true);
 
     InvitationsService.getInvitations(token)
@@ -122,6 +124,19 @@ const InvitationsShow = () => {
       })
   }, [])
 
+  const changeRowColor = (record) => {
+    let dateCreate = new Date(record.date);
+    let dateNow = new Date();
+
+    let daysDifference = Math.round((dateNow.getTime() - dateCreate.getTime()) / (1000 * 60 * 60 * 24));
+
+    if (daysDifference > 5) {
+      return 'row-color-alert';
+    } else {
+      return null;
+    }
+  }
+
   return (
     <Fragment>
       <Header />
@@ -148,6 +163,7 @@ const InvitationsShow = () => {
               dataSource={data}
               pagination={{ pageSize: 5 }}
               loading={loading}
+              rowClassName={(record, index) => changeRowColor(record)}
             />
           </div>
         </div>

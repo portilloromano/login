@@ -1,21 +1,23 @@
 import { createStore } from "redux";
 
 const initialState = {
-  user: {}
+  verticalMenu: {
+    defaultSelectedKeys: 'dashboard',
+    inlineCollapsed: true
+  }
 }
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case 'ADD_USER':
+    case 'VERTICAL_MENU':
       return {
         ...state,
-        user: action.user
+        verticalMenu: action.verticalMenu
       }
-    default:
-      break;
-  }
 
-  return state;
+    default:
+      return state;
+  }
 }
 
 const store = createStore(reducer,

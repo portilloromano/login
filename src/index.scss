@@ -22,6 +22,50 @@ body {
   background-color: $color-background;
 }
 
+.spinner {
+  position: absolute;
+  height: 100px;
+  width: 100px;
+  top: 50%;
+  left: 50%;
+}
+
+////////// TILE //////////
+
+.tile {
+  display: flex;
+  width: 250px;
+  height: 70px;
+  border: 1px solid #2e80e7;
+  border-radius: 3px;
+  color: #fff;
+
+  .left {
+    display: flex;
+    width: 35%;
+    justify-content: center;
+    align-items: center;
+    background-color: #2e80e7;
+    font-size: 32px;
+  }
+
+  .right {
+    display: flex;
+    flex-direction: column;
+    width: 65%;
+    background-color: #5d9cec;
+    padding-left: 10px;
+
+    .statics {
+      font-size: 24px;
+    }
+
+    .title {
+      text-transform: uppercase;
+    }
+  }
+}
+
 ////////// LOGIN //////////
 
 #content-login {
@@ -91,6 +135,10 @@ header {
   justify-content: space-between;
   align-items: center;
 
+  @media (max-width: 544px) {
+    flex-direction: column;
+  }
+
   #logo-button {
     display: flex;
     align-items: center;
@@ -111,9 +159,28 @@ header {
 
   #user {
     display: flex;
-    flex-direction: column;
-    text-align: center;
-    line-height: 1.3rem;
+
+    .ant-menu-submenu-title {
+      padding: unset;
+    }
+
+    span {
+      display: flex;
+      align-items: center;
+      margin-right: 0.2rem;
+    }
+
+    .ant-avatar {
+      display: flex;
+      justify-content: center;
+      margin: 0.2rem 0;
+      height: 64px;
+      width: 64px;
+
+      .anticon {
+        font-size: 32px;
+      }
+    }
   }
 }
 
@@ -124,8 +191,73 @@ header {
   margin-top: 0.2rem;
 
   ul.ant-menu {
+    height: 100vh;
+
     li.ant-menu-item {
       padding-right: 5rem;
+    }
+  }
+
+  ul.ant-menu-sub {
+    height: unset;
+  }
+}
+
+////////// DASHBOARD //////////
+
+#dashboard {
+  display: flex;
+  margin-top: 1.5rem;
+  justify-content: center;
+
+  #content {
+    width: 90%;
+    box-shadow: 0.1rem 0.1rem 0.3rem $color-box-shadow;
+    max-width: 1024px;
+    background-color: #fff;
+
+    h1 {
+      color: $color-h1;
+      text-align: center;
+      margin-top: 1rem;
+    }
+
+    #tiles {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+
+      .tile {
+        margin-bottom: 1rem;
+      }
+
+      #users-active {
+        .tile {
+          border: 1px solid #196F3D;
+
+          .left {
+            background-color: #196F3D;
+          }
+
+          .right {
+            background-color: #1D8348;
+          }
+        }
+      }
+
+      #users-inactive {
+        .tile {
+          border: 1px solid #D68910;
+
+          .left {
+            background-color: #D68910;
+          }
+
+          .right {
+            background-color: #F5B041;
+          }
+        }
+      }
     }
   }
 }

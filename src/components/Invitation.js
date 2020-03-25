@@ -1,13 +1,14 @@
 import React, { useState, Fragment, useEffect } from 'react';
 import { Form, Input, Button, Select } from 'antd';
 import Header from './Header';
-import { localGetItem } from '../services/localstorage.service';
+import { getLocalJwt } from '../services/localStorage.service';
 import InvitationsService from '../services/apis/invitations.service';
 import ModalMessage from './ModalMessage';
 
-const token = localGetItem('jwt');
+const Invitation = ({ ...props }) => {
+  const token = getLocalJwt();
+  if (token === null) props.history.push("/");
 
-const Invitation = () => {
   const { Option } = Select;
 
   const [modalShow, setModalShow] = useState({

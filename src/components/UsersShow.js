@@ -2,13 +2,13 @@ import React, { Fragment, useState, useEffect } from 'react';
 import { Table, Button } from 'antd';
 import { CSVLink } from "react-csv";
 import Header from './Header';
-import { localGetItem } from '../services/localstorage.service';
+import { getLocalJwt } from '../services/localStorage.service';
 import UsersService from '../services/apis/users.service';
 import toPDF from '../services/toPDF.service';
 import getColumnSearchProps from '../services/tableColumnSearch.service';
 import { parseDate } from '../services/helpers.service';
 
-const UserShow = () => {
+const UserShow = ({ ...props }) => {
   const [loading, setLoading] = useState(false);
 
   const [data, setData] = useState([]);
@@ -39,7 +39,7 @@ const UserShow = () => {
             return a.fullName.localeCompare(b.fullName)
           } catch (error) { }
         },
-        multiple: 4,
+        multiple: 6,
       },
       ...getColumnSearchProps('fullName'),
     },
@@ -53,7 +53,7 @@ const UserShow = () => {
             return a.email.localeCompare(b.email)
           } catch (error) { }
         },
-        multiple: 3,
+        multiple: 5,
       },
       ...getColumnSearchProps('email'),
     },
@@ -67,7 +67,7 @@ const UserShow = () => {
             return a.active.localeCompare(b.active)
           } catch (error) { }
         },
-        multiple: 2,
+        multiple: 4,
       },
       ...getColumnSearchProps('active'),
     },
@@ -81,7 +81,7 @@ const UserShow = () => {
             return a.active.localeCompare(b.active)
           } catch (error) { }
         },
-        multiple: 2,
+        multiple: 3,
       },
       ...getColumnSearchProps('active'),
     },
@@ -116,7 +116,9 @@ const UserShow = () => {
   ];
 
   useEffect(() => {
-    const token = localGetItem('jwt');
+    const token = getLocalJwt();
+    if (token === null) props.history.push("/");
+
     setLoading(true);
 
     UsersService.getUsers(token)
@@ -155,7 +157,7 @@ const UserShow = () => {
       .catch(err => {
         console.log(err);
       })
-  }, [])
+  }, []);
 
   const changeRowColor = (record) => {
     if (record.rgpd === '' && record.notification === '') {
