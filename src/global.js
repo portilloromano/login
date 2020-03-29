@@ -1,6 +1,6 @@
 const GLOBAL = {
-  'url': process.env === 'development' ?
-    'https://dev.api.geekshubsacademy.com' :
+  'url': process.env.NODE_ENV === 'development' ?
+    'http://dev.api.geekshubsacademy.com:4000' :
     'https://api.geekshubsacademy.com'
 }
 

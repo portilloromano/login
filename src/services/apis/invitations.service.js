@@ -8,6 +8,12 @@ class InvitationsService {
     })
   )
 
+  deleteInvitation = (id, token) => (
+    axios.delete(`${GLOBAL.url}/api/ams/v1_0/private/users/invited/${id}`, {
+      headers: { Authorization: "Bearer " + token }
+    })
+  )
+
   getBusiness = (token) => (
     axios.get(`${GLOBAL.url}/api/ams/v1_0/private/business`, {
       headers: { Authorization: "Bearer " + token }

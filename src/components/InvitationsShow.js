@@ -1,5 +1,5 @@
 import React, { Fragment, useState, useEffect } from 'react';
-import { Table, Button } from 'antd';
+import { Table, Button, Modal, Card, Pagination, Spin } from 'antd';
 import { CSVLink } from "react-csv";
 import Header from './Header';
 import { getLocalJwt } from '../services/localStorage.service';
@@ -7,17 +7,26 @@ import InvitationsService from '../services/apis/invitations.service';
 import toPDF from '../services/toPDF.service';
 import getColumnSearchProps from '../services/tableColumnSearch.service';
 import { parseDate } from '../services/helpers.service';
+import Footer from './Footer';
 
 const InvitationsShow = ({ ...props }) => {
+  const token = getLocalJwt();
+  if (token === null) props.history.push("/");
+
   const [loading, setLoading] = useState(false);
 
   const [data, setData] = useState([]);
 
-  const [exportData, setExportData] = useState({
+  const [dataExport, setDataExport] = useState({
     title: '',
     headers: [],
     data: []
   })
+
+  const [page, setPage] = useState({
+    current: 1,
+    total: 0
+  });
 
   const columns = [
     {
@@ -80,31 +89,42 @@ const InvitationsShow = ({ ...props }) => {
       },
       ...getColumnSearchProps('date'),
     },
+    {
+      title: 'Action',
+      key: 'action',
+      render: (text, record) => (
+        <Button onClick={() => resend(record)}>
+          Resend
+        </Button>
+      ),
+    },
   ];
 
-  useEffect(() => {
-    const token = getLocalJwt();
-    if (token === null) props.history.push("/");
-
+  const loadData = () => {
     setLoading(true);
 
     InvitationsService.getInvitations(token)
       .then(res => {
         setData(res.data.user.map(invitation => (
           {
+            ...invitation,
             key: invitation.id,
             fullName: `${invitation.name} ${invitation.surname}`,
-            email: invitation.email,
-            empresa: invitation.empresa,
             date: parseDate(invitation.createdAt)
           }
         ))
         );
 
-        setExportData(
+        setPage({
+          ...page,
+          total: res.data.user.length
+        });
+
+        setDataExport(
           {
             title: 'Invitations',
-            headers: [columns.map(column => column.title)],
+            headers: [columns.filter(column =>
+              column.title !== 'Action').map(column => column.title)],
             data: res.data.user.map(invitation => (
               [
                 invitation.id,
@@ -122,7 +142,49 @@ const InvitationsShow = ({ ...props }) => {
       .catch(err => {
         console.log(err);
       })
+  }
+
+  useEffect(() => {
+    loadData();
   }, [])
+
+  const modalSuccess = (title, body) => {
+    Modal.success({
+      title: title,
+      content: (
+        <div>
+          <p>{body}</p>
+        </div>
+      ),
+    });
+  }
+
+  const resend = (record) => {
+    InvitationsService.deleteInvitation(record.key, token)
+      .then(res => {
+        InvitationsService.postInvitation({ data: record }, token)
+          .then(res => {
+            modalSuccess('Invitation', 'The invitation was forwarded');
+
+            loadData();
+          })
+
+          .catch(err => {
+            console.log(err);
+          })
+      })
+
+      .catch(err => {
+        console.log(err);
+      })
+  }
+
+  const changePage = currentPage => {
+    setPage({
+      ...page,
+      current: currentPage,
+    });
+  }
 
   const changeRowColor = (record) => {
     let dateCreate = new Date(record.date);
@@ -145,15 +207,15 @@ const InvitationsShow = ({ ...props }) => {
           <h1>Invitations</h1>
           <div id="btn">
             <Button onClick={() => toPDF(
-              exportData.title,
-              exportData.headers,
-              exportData.data, 'invitations.pdf',
+              dataExport.title,
+              dataExport.headers,
+              dataExport.data, 'invitations.pdf',
               'landscape'
             )}>PDF</Button>
             <CSVLink
               className="ant-btn"
               filename={"invitations.csv"}
-              data={exportData.headers.concat(exportData.data)}>
+              data={dataExport.headers.concat(dataExport.data)}>
               CSV
             </CSVLink>
           </div>
@@ -166,8 +228,49 @@ const InvitationsShow = ({ ...props }) => {
               rowClassName={(record, index) => changeRowColor(record)}
             />
           </div>
+          <div id="mobile">
+            {loading ?
+              <div className="spinner">
+                <Spin />
+              </div> :
+              null
+            }
+            <div id="cards">
+              {data.slice((page.current - 1) * 5, page.current * 5).map(invitation => {
+                let dateCreate = new Date(invitation.date);
+                let dateNow = new Date();
+                let daysDifference = Math.round((dateNow.getTime() - dateCreate.getTime()) / (1000 * 60 * 60 * 24));
+                return (
+                  < Card
+                    title={`Id. ${invitation.key}`}
+                    key={invitation.key}
+                    className="card"
+                    headStyle={daysDifference > 5 ? { backgroundColor: 'lightcoral' } : null}
+                  >
+                    <p><strong>Name:</strong> {invitation.fullName}</p>
+                    <p><strong>Email:</strong> {invitation.email}</p>
+                    <p><strong>Company:</strong> {invitation.empresa}</p>
+                    <p><strong>Date:</strong> {invitation.date}</p>
+                    <Button onClick={() => resend(invitation)}>
+                      Resend
+                    </Button>
+                  </Card>
+                );
+              })
+              }
+            </div>
+            <div id="pagination">
+              <Pagination
+                current={page.current}
+                onChange={changePage}
+                pageSize="5"
+                total={page.total}
+              />
+            </div>
+          </div>
         </div>
       </div>
+      <Footer />
     </Fragment>
   );
 }

@@ -20,6 +20,9 @@ $header-color-back-active: #fff2f0;
 
 body {
   background-color: $color-background;
+  padding-top: 75px;
+  min-height: 100vh;
+  margin-bottom: 25px;
 }
 
 .spinner {
@@ -129,15 +132,17 @@ body {
 ////////// HEADER //////////
 
 header {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 75px;
   background-color: #fff;
   box-shadow: 0.1rem 0.1rem 0.3rem $header-color-box-shadow;
   display: flex;
   justify-content: space-between;
   align-items: center;
-
-  @media (max-width: 544px) {
-    flex-direction: column;
-  }
+  z-index: 100;
 
   #logo-button {
     display: flex;
@@ -154,6 +159,22 @@ header {
       box-shadow: unset;
       color: $color-font-hover;
       font-size: 2rem;
+    }
+  }
+  #rol-nickname {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+
+    #rol {
+      color: $color-font-hover;
+      font-size: 1rem;
+      line-height: 0.9rem;
+    }
+
+    #nickname {
+      font-size: 0.7rem;
+      line-height: 0.6rem;
     }
   }
 
@@ -182,25 +203,45 @@ header {
       }
     }
   }
+
+  @media (max-width: 544px) {
+    #logo {
+      display: none !important;
+    }
+  }
 }
 
 ////////// VERTICAL MENU //////////
 
 #vertical-menu {
-  float: left;
-  margin-top: 0.2rem;
+  position: fixed;
+  left: 0;
+  top: 79px;
+  z-index: 100;
+  width: 200px;
 
   ul.ant-menu {
     height: 100vh;
-
-    li.ant-menu-item {
-      padding-right: 5rem;
-    }
   }
 
   ul.ant-menu-sub {
     height: unset;
   }
+}
+
+////////// FOOTER //////////
+
+#footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 25px;
+  background-color: #fff;
+  box-shadow: 0.1rem 0.1rem 0.3rem $header-color-box-shadow;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 ////////// DASHBOARD //////////
@@ -214,6 +255,7 @@ header {
     width: 90%;
     box-shadow: 0.1rem 0.1rem 0.3rem $color-box-shadow;
     max-width: 1024px;
+    min-width: 270px;
     background-color: #fff;
 
     h1 {
@@ -225,7 +267,8 @@ header {
     #tiles {
       display: flex;
       flex-wrap: wrap;
-      justify-content: space-around;
+      justify-content: space-between;
+      margin: 0 1rem;
 
       .tile {
         margin-bottom: 1rem;
@@ -233,30 +276,73 @@ header {
 
       #users-active {
         .tile {
-          border: 1px solid #196F3D;
+          border: 1px solid #2b957a;
 
           .left {
-            background-color: #196F3D;
+            background-color: #2b957a;
           }
 
           .right {
-            background-color: #1D8348;
+            background-color: #37bc9b;
           }
         }
       }
 
       #users-inactive {
         .tile {
-          border: 1px solid #D68910;
+          border: 1px solid #564aa3;
 
           .left {
-            background-color: #D68910;
+            background-color: #564aa3;
           }
 
           .right {
-            background-color: #F5B041;
+            background-color: #7266ba;
           }
         }
+      }
+
+      #news-users-chart {
+        width: 100%;
+        min-width: 250px;
+        border: 1px solid #2e80e7;
+        border-radius: 3px;
+        background-color: #5d9cec;
+        margin-bottom: 1rem;
+        height: 210px;
+
+        #title-chart {
+          color: #fff;
+          text-transform: uppercase;
+          padding: 10px;
+        }
+
+        #tooltips {
+          display: flex;
+          flex-direction: column;
+          background-color: #2e80e7;
+          border-radius: 3px;
+          color: #fff;
+          padding: 10px;
+
+          .month {
+            font-size: 0.8rem;
+            line-height: 1rem;
+            font-weight: normal;
+            color: rgba($color: #fff, $alpha: 0.7);
+          }
+
+          .value {
+            font-size: 0.9rem;
+            line-height: 0.9rem;
+          }
+        }
+      }
+    }
+    @media (max-width: 544px) {
+      #tiles {
+        display: flex;
+        justify-content: center;
       }
     }
   }
@@ -272,9 +358,9 @@ header {
   #content {
     width: 90%;
     box-shadow: 0.1rem 0.1rem 0.3rem $color-box-shadow;
-    max-width: 1024px;
     background-color: #fff;
     max-width: 768px;
+    min-width: 270px;
   }
 
   h1 {
@@ -347,8 +433,8 @@ header {
   #content {
     width: 90%;
     box-shadow: 0.1rem 0.1rem 0.3rem $color-box-shadow;
-    max-width: 1024px;
     background-color: #fff;
+    min-width: 270px;
 
     h1 {
       color: $color-h1;
@@ -372,6 +458,54 @@ header {
       img {
         height: 3rem;
         border-radius: 0.2rem;
+      }
+    }
+
+    #mobile {
+      display: none;
+      align-items: center;
+      flex-direction: column;
+
+      #cards {
+        width: 90%;
+        min-width: 250px;
+
+        .card {
+          margin-bottom: 1rem;
+          box-shadow: 0.1rem 0.1rem 0.3rem $color-box-shadow;
+
+          #image {
+            display: flex;
+            justify-content: center;
+
+            img {
+              width: 100px;
+              margin-bottom: 1rem;
+              border-radius: 50%;
+            }
+          }
+          button {
+            width: 100%;
+          }
+        }
+      }
+
+      #pagination {
+        margin-bottom: 2.5rem;
+      }
+    }
+
+    @media (max-width: 544px) {
+      #btn {
+        display: none;
+      }
+
+      #table {
+        display: none;
+      }
+
+      #mobile {
+        display: flex;
       }
     }
   }

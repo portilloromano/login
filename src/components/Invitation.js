@@ -1,24 +1,15 @@
 import React, { useState, Fragment, useEffect } from 'react';
-import { Form, Input, Button, Select } from 'antd';
+import { Form, Input, Button, Select, Modal } from 'antd';
 import Header from './Header';
 import { getLocalJwt } from '../services/localStorage.service';
 import InvitationsService from '../services/apis/invitations.service';
-import ModalMessage from './ModalMessage';
+import Footer from './Footer';
 
 const Invitation = ({ ...props }) => {
   const token = getLocalJwt();
   if (token === null) props.history.push("/");
 
   const { Option } = Select;
-
-  const [modalShow, setModalShow] = useState({
-    type: '',
-    title: '',
-    body: '',
-    visible: false
-  });
-
-  const { type, title, body, visible } = modalShow;
 
   const [business, setBusiness] = useState([]);
 
@@ -32,6 +23,29 @@ const Invitation = ({ ...props }) => {
       })
   }, [])
 
+
+  const modalSuccess = (title, body) => {
+    Modal.success({
+      title: title,
+      content: (
+        <div>
+          <p>{body}</p>
+        </div>
+      ),
+    });
+  }
+
+  const modalError = (title, body) => {
+    Modal.error({
+      title: title,
+      content: (
+        <div>
+          <p>{body}</p>
+        </div>
+      ),
+    });
+  }
+
   const onFinish = values => {
     const data = {
       data: values
@@ -39,20 +53,10 @@ const Invitation = ({ ...props }) => {
 
     InvitationsService.postInvitation(data, token)
       .then(res => {
-        setModalShow({
-          type: 'success',
-          title: 'Invitation',
-          body: 'The invitation was sent',
-          visible: true
-        });
+        modalSuccess('Invitation', 'The invitation was sent');
       })
       .catch(err => {
-        setModalShow({
-          type: 'error',
-          title: 'Invitation',
-          body: 'The invitation was not sent',
-          visible: true
-        });
+        modalError('Invitation', 'The invitation was not sent');
         console.log(err);
       })
   };
@@ -162,9 +166,8 @@ const Invitation = ({ ...props }) => {
             </div>
           </Form>
         </div>
-
       </div>
-      {visible ? <ModalMessage type={type} title={title} body={body} /> : null}
+      <Footer />
     </Fragment>
   );
 }

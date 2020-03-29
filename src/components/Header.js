@@ -18,6 +18,7 @@ const Header = ({ setVerticalMenu, verticalMenu, ...props }) => {
   const { inlineCollapsed } = verticalMenu;
 
   const { SubMenu } = Menu;
+
   const user = getLocalUser();
   if (user.exist === false) props.history.push("/");
 
@@ -49,6 +50,11 @@ const Header = ({ setVerticalMenu, verticalMenu, ...props }) => {
           </Button>
         </div>
 
+        <div id="rol-nickname">
+          <span id="rol">{rol}</span>
+          <span id="nickname">{nickname}</span>
+        </div>
+
         <Menu
           id="user"
           mode="horizontal"
@@ -56,12 +62,12 @@ const Header = ({ setVerticalMenu, verticalMenu, ...props }) => {
           <SubMenu
             title={
               <span className="submenu-title-wrapper">
-                <span>{`${nickname} (${rol})`}</span>
                 <div>
                   {
-                    img_profile !== null ? <Avatar src={img_profile} /> : <Avatar icon={<UserOutlined />} />
+                    img_profile !== null ?
+                      <Avatar src={img_profile} /> :
+                      <Avatar icon={<UserOutlined />} />
                   }
-
                 </div>
               </span>
             }
@@ -75,7 +81,7 @@ const Header = ({ setVerticalMenu, verticalMenu, ...props }) => {
         </Menu>
       </header>
       <VerticalMenu />
-    </Fragment>
+    </Fragment >
   );
 }
 
