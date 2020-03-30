@@ -68,7 +68,7 @@ const Dashboard = ({ ...props }) => {
       return (
         <div id="tooltips">
           <span className="month">{label}</span>
-          <span className="value">{`Users: ${payload[0].value}`}</span>
+          <span className="value">{`Users: ${payload ? payload[0].value : null}`}</span>
         </div>
       );
     }
