@@ -20,12 +20,12 @@ const Dashboard = ({ ...props }) => {
       "July", "August", "September", "October", "November", "December"
     ];
     const year_current = new Date().getFullYear();
-    for (let i = 1; i <= 12; i++) {
+    for (let i = 0; i < 12; i++) {
       setDataChart(dataChart =>
         [
           ...dataChart,
           {
-            month: monthNames[i - 1],
+            month: monthNames[i],
             users: users.filter(user => {
               let date = new Date(user.createdAt);
               if (date.getFullYear() === year_current && date.getMonth() === i) {
