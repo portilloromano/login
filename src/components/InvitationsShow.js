@@ -1,5 +1,6 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import { Table, Button, Modal, Card, Pagination, Spin } from 'antd';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { CSVLink } from "react-csv";
 import Header from './Header';
 import { getLocalJwt } from '../services/localStorage.service';
@@ -27,6 +28,8 @@ const InvitationsShow = ({ ...props }) => {
     current: 1,
     total: 0
   });
+
+  const { confirm } = Modal;
 
   const columns = [
     {
@@ -93,9 +96,14 @@ const InvitationsShow = ({ ...props }) => {
       title: 'Action',
       key: 'action',
       render: (text, record) => (
-        <Button onClick={() => resend(record)}>
-          Resend
-        </Button>
+        <div id="button-action">
+          <Button onClick={() => resend(record)}>
+            Resend
+          </Button>
+          <Button onClick={() => modalConfirm(record)}>
+            Delete
+          </Button>
+        </div>
       ),
     },
   ];
@@ -110,7 +118,9 @@ const InvitationsShow = ({ ...props }) => {
             ...invitation,
             key: invitation.id,
             fullName: `${invitation.name} ${invitation.surname}`,
-            date: parseDate(invitation.createdAt)
+            date: parseDate(invitation.createdAt),
+            empresa: invitation.empresa !== null ?
+              invitation.empresa.businessName : null
           }
         ))
         );
@@ -159,6 +169,17 @@ const InvitationsShow = ({ ...props }) => {
     });
   }
 
+  const modalConfirm = record => {
+    confirm({
+      title: 'Do you Want to delete these invitation?',
+      icon: <ExclamationCircleOutlined />,
+      content: `Id. ${record.key} - ${record.fullName}`,
+      onOk() {
+        deleteInvitation(record);
+      },
+    });
+  }
+
   const resend = (record) => {
     InvitationsService.deleteInvitation(record.key, token)
       .then(res => {
@@ -172,6 +193,19 @@ const InvitationsShow = ({ ...props }) => {
           .catch(err => {
             console.log(err);
           })
+      })
+
+      .catch(err => {
+        console.log(err);
+      })
+  }
+
+  const deleteInvitation = (record) => {
+    InvitationsService.deleteInvitation(record.key, token)
+      .then(res => {
+        modalSuccess('Invitation', 'The invitation was deleted');
+
+        loadData();
       })
 
       .catch(err => {
@@ -251,9 +285,14 @@ const InvitationsShow = ({ ...props }) => {
                     <p><strong>Email:</strong> {invitation.email}</p>
                     <p><strong>Company:</strong> {invitation.empresa}</p>
                     <p><strong>Date:</strong> {invitation.date}</p>
-                    <Button onClick={() => resend(invitation)}>
-                      Resend
-                    </Button>
+                    <div id="buttons-card">
+                      <Button onClick={() => resend(invitation)}>
+                        Resend
+                      </Button>
+                      <Button onClick={() => modalConfirm(invitation)}>
+                        Delete
+                      </Button>
+                    </div>
                   </Card>
                 );
               })

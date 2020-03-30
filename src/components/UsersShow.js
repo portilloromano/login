@@ -1,5 +1,5 @@
 import React, { Fragment, useState, useEffect } from 'react';
-import { Table, Button, Modal, Card, Pagination, Spin } from 'antd';
+import { Table, Button, Modal, Card, Pagination, Spin, Select } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { CSVLink } from "react-csv";
 import Header from './Header';
@@ -30,6 +30,8 @@ const UserShow = ({ ...props }) => {
   });
 
   const { confirm } = Modal;
+
+  const { Option } = Select;
 
   const columns = [
     {
@@ -168,6 +170,7 @@ const UserShow = ({ ...props }) => {
             title: 'Users',
             headers: [columns.filter(column =>
               column.title !== '' && column.title !== 'Action').map(column => column.title)],
+
             data: sortedByIdDes.map(user => (
               [
                 user.id,
@@ -193,11 +196,33 @@ const UserShow = ({ ...props }) => {
     loadData();
   }, []);
 
+  const modalSuccess = (title, body) => {
+    Modal.success({
+      title: title,
+      content: (
+        <div>
+          <p>{body}</p>
+        </div>
+      ),
+    });
+  }
+
+  const modalError = (title, body) => {
+    Modal.error({
+      title: title,
+      content: (
+        <div>
+          <p>{body}</p>
+        </div>
+      ),
+    });
+  }
+
   const modalConfirm = record => {
     confirm({
       title: 'Do you Want to activated these user?',
       icon: <ExclamationCircleOutlined />,
-      content: record.fullName,
+      content: `Id. ${record.key} - ${record.fullName}`,
       onOk() {
         activate(record);
       },
@@ -207,9 +232,16 @@ const UserShow = ({ ...props }) => {
   const activate = (record) => {
     UsersService.activateUser(record.key, token)
       .then(res => {
+        modalSuccess('Users', 'The user was activated');
+
         loadData();
       })
       .catch(err => {
+        if (err.response.status === 403 &&
+          err.response.data.message === 'No existe password debe recuperar primero la contraseña') {
+          modalError('Users', 'There is no password, you must recover the password first');
+        }
+
         console.log(err);
       })
   }
@@ -269,6 +301,7 @@ const UserShow = ({ ...props }) => {
               </div> :
               null
             }
+
             <div id="cards">
               {data.slice((page.current - 1) * 5, page.current * 5).map(user => {
                 return (
@@ -292,7 +325,7 @@ const UserShow = ({ ...props }) => {
                     <p><strong>RGPD:</strong> {user.rgpd}</p>
                     <p><strong>Notifications:</strong> {user.notifications}</p>
                     <p><strong>Date:</strong> {user.date}</p>
-                    <Button onClick={() => modalConfirm(user.key)}>
+                    <Button onClick={() => modalConfirm(user)}>
                       Activate
                     </Button>
                   </Card>

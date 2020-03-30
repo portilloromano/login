@@ -9,7 +9,7 @@ class UserService {
     )
 
     activateUser = (id, token) => (
-        axios.put(`${GLOBAL.url}/api/ams/v1_0/private/users/active/${id}`, {
+        axios.put(`${GLOBAL.url}/api/ams/v1_0/private/users/active/${id}`, null, {
             headers: { Authorization: "Bearer " + token }
         })
     )
