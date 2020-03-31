@@ -9,6 +9,7 @@ import toPDF from '../services/toPDF.service';
 import getColumnSearchProps from '../services/tableColumnSearch.service';
 import { parseDate } from '../services/helpers.service';
 import Footer from './Footer';
+import { sortData } from '../services/helpers.service';
 
 const UserShow = ({ ...props }) => {
   const token = getLocalJwt();
@@ -27,6 +28,11 @@ const UserShow = ({ ...props }) => {
   const [page, setPage] = useState({
     current: 1,
     total: 0
+  });
+
+  const [sortUser, setSortUser] = useState({
+    key: 'key',
+    sortInOrder: 'desc'
   });
 
   const { confirm } = Modal;
@@ -196,6 +202,12 @@ const UserShow = ({ ...props }) => {
     loadData();
   }, []);
 
+  useEffect(() => {
+    const tempData = sortData(data, sortUser.key, sortUser.sortInOrder);
+    console.log(tempData);
+    setData(tempData);
+  }, [sortUser]);
+
   const modalSuccess = (title, body) => {
     Modal.success({
       title: title,
@@ -244,6 +256,28 @@ const UserShow = ({ ...props }) => {
 
         console.log(err);
       })
+  }
+
+  const sortUsers = () => {
+
+  }
+
+  const handleChangeKey = (key) => {
+    setSortUser({
+      ...sortUser,
+      key: key
+    }, () => {
+      sortUsers();
+    });
+  }
+
+  const handleChangeSortInOrder = (sortInOrder) => {
+    setSortUser({
+      ...sortUser,
+      sortInOrder: sortInOrder
+    }, () => {
+      sortUsers();
+    });
   }
 
   const changePage = currentPage => {
@@ -302,33 +336,61 @@ const UserShow = ({ ...props }) => {
               null
             }
 
+            <div id="sort-users">
+              <Select
+                className="field"
+                onChange={handleChangeKey}
+                defaultValue={sortUser.key}
+              >
+                <option key="key">ID</option>
+                <option key="fullName">Full Name</option>
+                <option key="email">Email</option>
+                <option key="state">State</option>
+                <option key="rgpd">RGPD</option>
+                <option key="notifications">Notifications</option>
+                <option key="date">Register Date</option>
+              </Select>
+
+              <Select
+                className="sort"
+                onChange={handleChangeSortInOrder}
+                defaultValue={sortUser.sortInOrder}
+              >
+                <Option key="asc">Ascendent</Option>
+                <Option key="desc">Descendent</Option>
+              </Select>
+            </div>
+
             <div id="cards">
+              {console.log('data', data)}
               {data.slice((page.current - 1) * 5, page.current * 5).map(user => {
                 return (
-                  < Card
-                    title={`Id. ${user.key}`}
-                    key={user.key}
-                    className="card"
-                    headStyle={user.rgpd === 'No' && user.notifications === 'No' ?
-                      { backgroundColor: 'lightcoral' } :
-                      user.rgpd === 'No' ?
-                        { backgroundColor: 'lightgoldenrodyellow' } :
-                        null
-                    }
-                  >
-                    <div id="image">
-                      <img src={user.img_profile} alt={user.fullName} />
-                    </div>
-                    <p><strong>Name:</strong> {user.fullName}</p>
-                    <p><strong>Email:</strong> {user.email}</p>
-                    <p><strong>State:</strong> {user.state}</p>
-                    <p><strong>RGPD:</strong> {user.rgpd}</p>
-                    <p><strong>Notifications:</strong> {user.notifications}</p>
-                    <p><strong>Date:</strong> {user.date}</p>
-                    <Button onClick={() => modalConfirm(user)}>
-                      Activate
+                  <div key={user.key}>
+                    < Card
+                      title={`Id. ${user.key}`}
+                      key={user.key}
+                      className="card"
+                      headStyle={user.rgpd === 'No' && user.notifications === 'No' ?
+                        { backgroundColor: 'lightcoral' } :
+                        user.rgpd === 'No' ?
+                          { backgroundColor: 'lightgoldenrodyellow' } :
+                          null
+                      }
+                    >
+                      <div id="image">
+                        <img src={user.img_profile} alt={user.fullName} />
+                      </div>
+                      <p><strong>Name:</strong> {user.fullName}</p>
+                      <p><strong>Email:</strong> {user.email}</p>
+                      <p><strong>State:</strong> {user.state}</p>
+                      <p><strong>RGPD:</strong> {user.rgpd}</p>
+                      <p><strong>Notifications:</strong> {user.notifications}</p>
+                      <p><strong>Date:</strong> {user.date}</p>
+                      <Button onClick={() => modalConfirm(user)}>
+                        Activate
                     </Button>
-                  </Card>
+                    </Card>
+                  </div>
                 );
               })
               }
