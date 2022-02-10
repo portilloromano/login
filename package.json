@@ -10,7 +10,7 @@
     "axios": "^0.19.2",
     "jspdf": "^1.5.3",
     "jspdf-autotable": "^3.2.13",
-    "node-sass": "^4.13.1",
+    "node-sass": "^7.0.0",
     "react": "^16.13.0",
     "react-bootstrap": "^1.0.0-beta.17",
     "react-csv": "^2.0.1",
